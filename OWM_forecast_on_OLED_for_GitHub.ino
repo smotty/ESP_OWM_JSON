@@ -8,11 +8,6 @@
  *
  */
 
-/*-------------справочные данные----------------
-  //шаблон GET-запроса - api.openweathermap.org/data/2.5/forecast?q={city name},{country code}
-  //api.openweathermap.org/data/2.5/forecast?id=1490624&appid=
-  //id г. Сургута в OWM - 1490624
-  ----------------------------------------------*/
 
 #include <ESP8266WiFi.h>            			//методы для подключения к сети WiFi
 #include <ESP8266HTTPClient.h>      			//методы для отправки HTTP-запросы
@@ -23,8 +18,8 @@
 #define TIME_ZONE 5								//определяем здесь часовой пояс
 #define LED_BUILTIN  2       					//встроенный светодиод платы ESP8266 "висит" на GPIO2, эта цепь инвертирована - подтянута к питанию, для включения - необходимо подавать лог 0 на неё!
 #define OLED_RESET 2
-#define APPID "23c44e5e16a618179ddb96457d819225"
-#define cityID 1490624
+//#define APPID ""
+//#define cityID 
 
 Adafruit_SSD1306 display(OLED_RESET);			//объявление экземпляра класса OLED-дисплея
 												//прототипы функции
@@ -32,10 +27,8 @@ String request(void);             				//функция формирования 
 void JS_Parse(String);							//функция дешифровки JSON-строки
 String Epoch_Time_Convert(int);					//функция вычисления времени из Unixtimestamp
 
-const char* ssid = "RTK-402318";				//данные для подключения к Wi-Fi
-const char* password = "ELTX5C0245F0";			//
-// const char* ssid = "AAAAAEx47B4AAwHSRedmi";	//
-// const char* password = "C6360436";			//
+const char* ssid = "";				//данные для подключения к Wi-Fi
+const char* password = "";			//
 
 /*
 #
@@ -105,7 +98,7 @@ String request(void)
     Serial.println("Выполнение GET-запроса");
     //формируем HTTP-запрос
     http.begin(zapros);
-    // http.begin("http://api.openweathermap.org/data/2.5/weather?id=1490624&appid=23c44e5e16a618179ddb96457d819225");
+    
     http.addHeader("Content-Type", "application/json");
     httpcode = http.GET();              			//код ответа от сервера (200 -- успех!)
     response = http.getString();        			//в response записываем ответ от сервера
@@ -142,10 +135,6 @@ void JS_Parse(String parsthis)
 	// String description[8];						//массив строк, попробуем описание погоды затолкать в него...
 
 	otrezok_begin = parsthis.indexOf(pars_begin);   //ищем в исходной JSON-строке место начала
-
-	//это для проверки работы программы
-	// Serial.print("искомая строка найдена, индекс первого символа = ");
-	// Serial.println(otrezok_begin); //выводит на печать 39
 
 	otrezok_begin += 8;       						//смещаемся на 8 символов далее по строке -- там будет находиться начало массива данных JSON
 
